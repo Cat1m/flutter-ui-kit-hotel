@@ -209,7 +209,6 @@ class _FeaturedCarouselState extends State<_FeaturedCarousel> {
             onPageChanged: (i) => setState(() => _index = i),
             itemCount: widget.items.length,
             itemBuilder: (ctx, i) {
-              final h = widget.items[i];
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
@@ -227,7 +226,7 @@ class _FeaturedCarouselState extends State<_FeaturedCarousel> {
                               end: Alignment.bottomCenter,
                               colors: [
                                 Colors.transparent,
-                                Colors.black.withOpacity(0.6),
+                                Colors.black.withValues(alpha: .6),
                               ],
                             ),
                           ),

@@ -8,7 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_ui_kit_hotel/main.dart';
 import 'package:flutter_ui_kit_hotel/my_app.dart';
 
 void main() {

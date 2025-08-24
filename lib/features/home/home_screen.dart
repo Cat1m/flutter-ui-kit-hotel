@@ -19,15 +19,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int _navIndex = 0;
 
   List<String> get _categories => const [
-    'All',
-    'Beach',
-    'City',
-    'Business',
-    'Family',
-    'Romantic',
-    'Budget',
-    'Luxury',
-  ];
+        'All',
+        'Beach',
+        'City',
+        'Business',
+        'Family',
+        'Romantic',
+        'Budget',
+        'Luxury',
+      ];
 
   List<Map<String, dynamic>> _genHotels(int n, {String seed = 'hotel'}) {
     return List.generate(n, (i) {
@@ -242,13 +242,17 @@ class _FeaturedCarouselState extends State<_FeaturedCarousel> {
                               children: [
                                 Text(
                                   'h.2',
-                                  style: Theme.of(context).textTheme.titleMedium
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
                                       ?.copyWith(color: Colors.white),
                                 ),
                                 const Gap(4),
                                 Text(
                                   'h.2',
-                                  style: Theme.of(context).textTheme.bodySmall
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
                                       ?.copyWith(color: Colors.white70),
                                 ),
                               ],

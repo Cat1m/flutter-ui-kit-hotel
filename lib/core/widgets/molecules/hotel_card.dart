@@ -1,8 +1,7 @@
-// lib/core/widgets/molecules/hotel_card.dart
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_ui_kit_hotel/core/widgets/atoms/rating_stars.dart';
+import 'package:flutter_ui_kit_hotel/core/widgets/atoms/resilient_image.dart';
 
 class HotelCard extends StatelessWidget {
   const HotelCard({
@@ -35,7 +34,13 @@ class HotelCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover),
+              child: ResilientImage(
+                url: imageUrl, // có retry → /w/h nếu lỗi
+                fit: BoxFit.cover,
+                width: 800, // fallback size hợp lý cho card
+                height: 450,
+                memCacheWidth: 800, // cache gọn hơn nhưng vẫn nét
+              ),
             ),
             const Gap(8),
             Padding(

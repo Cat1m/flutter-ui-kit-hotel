@@ -29,14 +29,20 @@ class _HomeScreenState extends State<HomeScreen> {
         'Luxury',
       ];
 
+  // ---- Picsum helpers -------------------------------------------------------
+  String _picsumSeed(String seed, int w, int h) =>
+      'https://picsum.photos/seed/${Uri.encodeComponent(seed)}/$w/$h';
+
+  // ---- Fake data -------------------------------------------------------------
   List<Map<String, dynamic>> _genHotels(int n, {String seed = 'hotel'}) {
     return List.generate(n, (i) {
       final city = _faker.address.city();
+      final s = '$seed-$i';
       return {
-        'id': '$i',
+        'id': s,
         'title': _faker.company.name(),
-        'image': 'https://picsum.photos/seed/$seed$i/1200/700',
-        'price': '\${120 + (i * 15)}/night',
+        'image': _picsumSeed(s, 1000, 600), // ảnh ổn định theo seed
+        'price': '\$${120 + (i * 15)}/night',
         'rating': 3.5 + (i % 3) * 0.5,
         'location': city,
       };
@@ -53,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Search field (tap to go Search page)
+          // Search field
           InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: () => context.go('/search'),
@@ -67,10 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   const Icon(Icons.search),
                   const Gap(8),
-                  Text(
-                    'Where to?',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  Text('Where to?',
+                      style: Theme.of(context).textTheme.bodyMedium),
                   const Spacer(),
                   const Icon(Icons.tune_rounded),
                 ],
@@ -99,13 +103,13 @@ class _HomeScreenState extends State<HomeScreen> {
           const Gap(20),
 
           // Featured carousel
-          _SectionTitle(title: 'Featured'),
+          const _SectionTitle(title: 'Featured'),
           const Gap(8),
           _FeaturedCarousel(items: featured),
           const Gap(20),
 
           // Popular list
-          _SectionTitle(title: 'Popular near you'),
+          const _SectionTitle(title: 'Popular near you'),
           const Gap(8),
           ...popular.map(
             (h) => HotelCard(
@@ -180,6 +184,8 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
+// ==================== Featured Carousel ====================
+
 class _FeaturedCarousel extends StatefulWidget {
   const _FeaturedCarousel({required this.items});
   final List<Map<String, dynamic>> items;
@@ -209,16 +215,17 @@ class _FeaturedCarouselState extends State<_FeaturedCarousel> {
             onPageChanged: (i) => setState(() => _index = i),
             itemCount: widget.items.length,
             itemBuilder: (ctx, i) {
+              final h = widget.items[i];
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
-                  onTap: () => context.push('/hotel/${'h.2'}'),
+                  onTap: () => context.push('/hotel/${h['id']}'),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        CachedNetworkImage(imageUrl: 'h.2', fit: BoxFit.cover),
+                        PicsumImage(url: h['image'], fit: BoxFit.cover),
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -240,7 +247,9 @@ class _FeaturedCarouselState extends State<_FeaturedCarousel> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'h.2',
+                                  h['title'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium
@@ -248,7 +257,9 @@ class _FeaturedCarouselState extends State<_FeaturedCarousel> {
                                 ),
                                 const Gap(4),
                                 Text(
-                                  'h.2',
+                                  h['location'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall
@@ -286,6 +297,54 @@ class _FeaturedCarouselState extends State<_FeaturedCarousel> {
           }),
         ),
       ],
+    );
+  }
+}
+
+// ==================== Picsum resilient image ====================
+
+class PicsumImage extends StatefulWidget {
+  const PicsumImage({super.key, required this.url, this.fit = BoxFit.cover});
+  final String url;
+  final BoxFit fit;
+
+  @override
+  State<PicsumImage> createState() => _PicsumImageState();
+}
+
+class _PicsumImageState extends State<PicsumImage> {
+  // 0 = dùng seed URL gốc; 1 = retry sang random /w/h; 2 = icon lỗi
+  int _stage = 0;
+
+  String _fallbackRandom() => 'https://picsum.photos/1000/600';
+
+  @override
+  Widget build(BuildContext context) {
+    final displayUrl = switch (_stage) {
+      0 => widget.url,
+      1 => _fallbackRandom(),
+      _ => '',
+    };
+
+    if (_stage >= 2) {
+      return const Center(child: Icon(Icons.broken_image_outlined));
+    }
+
+    return CachedNetworkImage(
+      imageUrl: displayUrl,
+      fit: widget.fit,
+      memCacheWidth: 1000,
+      placeholder: (_, __) => Container(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest),
+      errorWidget: (_, __, ___) {
+        // lần đầu fail (404/503) → thử random endpoint
+        // lần hai vẫn fail → icon lỗi
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          setState(() => _stage += 1);
+        });
+        return const SizedBox.shrink();
+      },
     );
   }
 }

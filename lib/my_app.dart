@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             title: 'Flutter Hotel UI Kit',
-            theme: AppTheme.light(GoogleFonts.plusJakartaSansTextTheme()),
-            darkTheme: AppTheme.dark(GoogleFonts.plusJakartaSansTextTheme()),
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
             themeMode: theme.mode,
             routerConfig: appRouter,
           );

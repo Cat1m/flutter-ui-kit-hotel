@@ -43,6 +43,19 @@ class AppTheme {
           statusBarBrightness: Brightness.light,
         ),
       ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surfaceVariant,
+        selectedColor:
+            AppColors.lightColorScheme.primary.withValues(alpha: .15),
+        disabledColor: AppColors.outline.withValues(alpha: .12),
+        labelStyle:
+            AppTextStyles.bodySmall.copyWith(color: AppColors.onSurfaceVariant),
+        secondaryLabelStyle:
+            AppTextStyles.bodySmall.copyWith(color: AppColors.onPrimary),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        brightness: Brightness.light,
+      ),
 
       // Bottom Navigation Bar Theme
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -153,16 +166,6 @@ class AppTheme {
         foregroundColor: cs.onPrimary,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
-
-      // Chip Theme
-      chipTheme: ChipThemeData(
-        backgroundColor: AppColors.surfaceVariant,
-        labelStyle: AppTextStyles.bodySmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
 
       // Dialog Theme
@@ -359,11 +362,19 @@ class AppTheme {
       // Chip Theme
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surfaceVariantDark,
+        selectedColor: AppColors.darkColorScheme.primary.withValues(alpha: .25),
+        disabledColor: AppColors.outlineDark.withValues(alpha: .12),
         labelStyle: AppTextStyles.bodySmall.copyWith(
           color: AppColors.onSurfaceVariantDark,
         ),
+        secondaryLabelStyle: AppTextStyles.bodySmall.copyWith(
+          color: AppColors.onPrimaryDark, // text trên chip khi chọn
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        brightness: Brightness.dark,
       ),
 
       // Dialog Theme

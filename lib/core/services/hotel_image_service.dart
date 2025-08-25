@@ -2,17 +2,6 @@
 import 'dart:math';
 
 class HotelImageService {
-  static const List<String> _hotelTypes = [
-    'luxury',
-    'beach',
-    'city',
-    'business',
-    'boutique',
-    'resort',
-    'villa',
-    'apartment'
-  ];
-
   // Curated list of reliable hotel/architecture photo IDs from Picsum
   static const List<int> _hotelPhotoIds = [
     1,
@@ -332,7 +321,7 @@ class HotelImageService {
       default:
         // 20% chance - Different photo pools
         return reliablePicsumImage(
-            seed: seed + '-alt',
+            seed: '$seed-alt',
             width: width,
             height: height,
             category: category);
